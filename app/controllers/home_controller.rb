@@ -33,7 +33,8 @@ class HomeController < ApplicationController
         message2: hello2
       })
       logger.info "=============="
-      logger.info params
+      logger.info msg
+      logger.info msisdn
 	end
 
 
