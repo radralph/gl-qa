@@ -16,15 +16,10 @@ gem 'httparty'
 
 gem 'pusher'
 
-group :production do
-	gem 'pg'
-end
 
 group :development, :test do
 	gem 'sqlite3', "~> 1.3.9"
 end
-
-gem 'pusher'
 
 
 # Gems used only for assets and not required
