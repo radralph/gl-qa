@@ -4,8 +4,6 @@
     channel.bind('my_event', function(data) {
     // alert(data.message);
     document.getElementsByTagName('LABEL')[0].innerHTML = data.message;
-    document.getElementsByTagName('LABEL')[1].innerHTML = data.message2;
-    alert(data.message);
     });
   </script>
 <center>
@@ -55,7 +53,6 @@
     </div>
 
      <div class="pure-u-1-5"><p>SMS MO</p>
-    	<%=label_tag 'msisdn', ''%><br>
     	<%=label_tag 'message', ''%>
     </div>
 
