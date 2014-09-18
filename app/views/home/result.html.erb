@@ -1,0 +1,6 @@
+<center>
+<pre>
+status:<br><input type="text" placeholder=<%=session[:response].code%> disabled style='width:25px'><br>
+Body:<br><%= text_area_tag :message, '', placeholder:session[:response].body, size:"50x20" ,autofocus: true%>
+
+<%=link_to 'Back', :back, :class => 'pure-button'%>
