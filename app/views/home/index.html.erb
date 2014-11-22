@@ -4,6 +4,7 @@
     channel.bind('my_event', function(data) {
     // alert(data.message);
     document.getElementsByTagName('LABEL')[0].innerHTML = data.message;
+    document.getElementsByTagName('LABEL')[1].innerHTML = data.message2;
     });
   </script>
 <center>
@@ -38,14 +39,14 @@
     </div>
     
     <div class="pure-u-1-5"><p>LBS</p>
-    	<%= form_tag 'charge', method: :post, class: "pure-form pure-form-stacked" do %>
+    	<%= form_tag 'lbs', method: :post, class: "pure-form pure-form-stacked" do %>
     		 <%= submit_tag "Track", class: "pure-button"%>
     	<%end%>
     </div>
     
-    <div class="pure-u-1-5"><p>Raven</p>
+    <div class="pure-u-1-5"><p>Subscriber Data Query</p>
     	<%= form_tag 'raven', method: :post, class: "pure-form pure-form-stacked" do %>
-			   <%= radio_button_tag 'raven', 'nf_promo', class: "pure-radio" %> NF Promo <br>
+			   <!-- <%#= radio_button_tag 'raven', 'nf_promo', class: "pure-radio" %> NF Promo <br> -->
 			   <%= radio_button_tag 'raven', 'mobile_internet_promo', class: "pure-radio" %>Internet Promo<br>
 			   <%= radio_button_tag 'raven', 'balance', class: "pure-radio" %> Balance <br><br>
 	        <%= submit_tag "Submit", class: "pure-button"%>
@@ -53,7 +54,7 @@
     </div>
 
      <div class="pure-u-1-5"><p>SMS MO</p>
-    	<%=label_tag 'message', ''%>
+    	<%=label_tag 'msisdn', ''%> <%=label_tag 'message', ''%>
     </div>
 
 </div>

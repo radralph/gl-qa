@@ -2,8 +2,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def getToken(code)
-  	    app_id = "Kep4uX9xGEu67Tg57rixxzu8oexKu5ko"
-        app_secret = "1a96bd6b6fc11a84a1f7dff8b01c2604077119a4a7d839e8e132bbdd6501b7d7"
+  	    app_id = "56njHrXa8RfA7izgbXca6EfaE6orHyL8"
+        app_secret = "cd58ad122c001bb8f92523ba6998e0338c6b8ba7446b22e4122e150de866d612"
         response = Net::HTTP.post_form(URI.parse('http://developer.globelabs.com.ph/oauth/access_token'),
         {'app_id'=>app_id, 'app_secret'=> app_secret, 'code' => code})
         access_token = JSON.parse(response.body)['access_token']
