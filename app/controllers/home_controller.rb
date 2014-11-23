@@ -16,7 +16,7 @@ class HomeController < ApplicationController
 		logger.info "yep"
 		logger.info session[:access_token]
 		logger.info session[:msisdn]
-		redirect_to :root
+		redirect_to :root 
  	end
 
 	def notify
@@ -49,7 +49,6 @@ class HomeController < ApplicationController
 	end
 
   def charge
-      content = open('http://devapi.globelabs.com.ph/payments/1183').read
       json = JSON.parse(content)
       increment = json['result'].first['reference_code'].to_i+1
         uri = URI.parse("http://devapi.globelabs.com.ph/payment/v1/transactions/amount/")
