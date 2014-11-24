@@ -77,5 +77,10 @@ class HomeController < ApplicationController
     render :json => res
   end
 
+  ##CHANGE TO HTTPS
+  # uri = "https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/3822/requests?" + QString
+  # response = HTTParty.post(uri,
+  #   :body => {:address => address, :message => message, :passphrase => passphrase})
+
 
 end
