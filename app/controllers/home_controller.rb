@@ -8,18 +8,26 @@ class HomeController < ApplicationController
 
 
 	def index
-
+    logger.info params
 	end
 
 	def redirect
     getToken(params[:code]) if params[:code]
-		logger.info "yep"
-		logger.info session[:access_token]
-		logger.info session[:msisdn]
-		redirect_to :root 
+		logger.info " "
+    logger.info params
+    logger.info "=========="
+    logger.info "%s %s" % ["access_token: ", session[:access_token]]
+		logger.info "%s %s" % ["msisdn: ", session[:msisdn]]
+		logger.info "=========="
+    redirect_to :root 
  	end
 
 	def notify
+      logger.info "=============="
+ 
+      logger.info params.to_json
+ 
+      logger.info "=============="
 	    msisdn = params['inboundSMSMessageList']['inboundSMSMessage'].first['senderAddress']
       msisdn = msisdn[7..msisdn.length]
       msg = params['inboundSMSMessageList']['inboundSMSMessage'].first['message']
@@ -29,39 +37,52 @@ class HomeController < ApplicationController
         message: hello,
         message2: hello2
       })
+      logger.info "MESSAGE: " + msg
+      logger.info "MSISDN: " + msisdn
       logger.info "=============="
-      logger.info msg
-      logger.info msisdn
-      logger.info params.to_json
 	end
 
 
 	def sms
-	  uri = URI.parse("http://devapi.globelabs.com.ph/smsmessaging/v1/outbound/7636/requests")
-    uri.query = "access_token=#{session[:access_token]}"
-    response = Net::HTTP.post_form(uri, {"address" => session[:msisdn], "message" => params[:message]})
-    logger.info "============"
-    logger.info session[:msisdn]
-    logger.info session[:access_token]
-    logger.info params[:message]
-    session[:response] = response
-    redirect_to result_path
+    token = session[:access_token]
+    uri = "https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/7635/requests?access_token=#{token}"
+    response = HTTParty.post(uri,:body => {:address => session[:msisdn], :message => params[:message]})
+    logger.info response.code
+    logger.info response.message
+    logger.info response.body
+
+	  # # uri = URI.parse("https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/7636/requests")
+   # #  uri.query = "access_token=#{session[:access_token]}"
+   # #  response = Net::HTTP.post_form(uri, {"address" => session[:msisdn], "message" => params[:message]})
+   #  logger.info "============"
+   #  logger.info session[:msisdn]
+   #  logger.info session[:access_token]
+   #  logger.info params[:message]
+   @response = response
+   render "home/result"
+   #redirect_to result_path
 	end
 
   def charge
+      content = open('https://devapi.globelabs.com.ph/payments/1183').read
       json = JSON.parse(content)
       increment = json['result'].first['reference_code'].to_i+1
-        uri = URI.parse("http://devapi.globelabs.com.ph/payment/v1/transactions/amount/")
-        uri.query = "access_token="+session[:access_token]
-        response = Net::HTTP.post_form(uri, {'description' => 'desc',
+        uri = URI.parse("https://devapi.globelabs.com.ph/payment/v1/transactions/amount?access_token=#{session[:access_token]}")
+       # uri.query = "access_token="+session[:access_token]
+
+        response = HTTParty.post(uri,:body => {'description' => 'desc',
         'endUserId' => session[:msisdn], 'amount' => params[:amount], 'referenceCode' => increment,
-          'transactionOperationStatus' => 'charged'}) 
+          'transactionOperationStatus' => 'charged'})
       session[:response] = response
+      logger.info response.code
+      logger.info response.message
+      logger.info response.body
+      logger.info increment
       redirect_to result_path
   end
 
   def lbs
-    res = HTTParty.get("http://devapi.globelabs.com.ph/location/v1/queries/location?access_token=#{session[:access_token]}&address=#{session[:msisdn]}&requestedAccuracy=100")
+    res = HTTParty.get("https://devapi.globelabs.com.ph/location/v1/queries/location?access_token=#{session[:access_token]}&address=#{session[:msisdn]}&requestedAccuracy=100")
     logger.info res.body
     logger.info res.code
     json = JSON.parse(res.body)
@@ -72,15 +93,9 @@ class HomeController < ApplicationController
 
   def raven
     logger.info params[:raven]
-    res = HTTParty.get("http://devapi.globelabs.com.ph/location/v1/queries/#{params[:raven]}?access_token=#{session[:access_token]}&address=#{session[:msisdn]}")
+    res = HTTParty.get("https://devapi.globelabs.com.ph/location/v1/queries/#{params[:raven]}?access_token=#{session[:access_token]}&address=#{session[:msisdn]}")
     res['yes'] if res 
     render :json => res
   end
-
-  ##CHANGE TO HTTPS
-  # uri = "https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/3822/requests?" + QString
-  # response = HTTParty.post(uri,
-  #   :body => {:address => address, :message => message, :passphrase => passphrase})
-
 
 end

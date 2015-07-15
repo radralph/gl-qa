@@ -8,11 +8,13 @@ class ApplicationController < ActionController::Base
         {'app_id'=>app_id, 'app_secret'=> app_secret, 'code' => code})
         access_token = JSON.parse(response.body)['access_token']
         msisdn = JSON.parse(response.body)['subscriber_number']
-        logger.info response.code
-        logger.info response.message
+        logger.info " "
+        logger.info "=========="
+        logger.info "%s %s" % ["response code: ", response.code]
         logger.info response.body
-        session[:access_token] = access_token
-        session[:msisdn] = msisdn
+        logger.info "=========="
+        logger.info " "
+        session[:access_token],session[:msisdn] = access_token, msisdn
   end
 
 end
